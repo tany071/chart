@@ -1,4 +1,5 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 // import charted from "./components/charted"
 import Chart from "chart.js/auto";
@@ -6,6 +7,7 @@ import { CategoryScale } from "chart.js";
 import { useState } from "react";
 import { BarChart } from './components/charted';
 import Profile from './components/profile';
+import { Data } from './data/data';
 
 
 Chart.register(CategoryScale);
@@ -14,24 +16,37 @@ Chart.register(CategoryScale);
 
 export default function App() {
   const [chartData, setChartData] = useState({
-    labels: ['Red', 'Orange', 'Blue', 'Pink', 'Yellow'],
+    labels: Data.map((data) => data.year),
     datasets: [
       {
         label: "Users Gained ",
-        data: [55, 23, 96, 32, 56],
+        data: Data.map((data) => data.userGain),
         backgroundColor: [
           "rgba(75,192,192,1)",
+          "#ecf0f1",
           "#50AF95",
           "#f3ba2f",
           "#2a71d0"
         ],
         borderColor: "black",
         borderWidth: 2
-        // barThickness: 20,
       }
     ]
   });
 
+  React.useEffect(() => {
+    setChartData((prevChartData) => ({
+      ...prevChartData,
+      labels: Data.map((data) => data.year),
+      datasets: [
+        {
+          ...prevChartData.datasets[0],
+          data: Data.map((data) => data.userGain)
+        }
+      ]
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Data]);
 
   return (
     <div className="App">
